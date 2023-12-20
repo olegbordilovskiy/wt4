@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" type="text/css" href="/style/adminFilm.css">
+    <title>My Cool Site</title>
+</head>
+<body>
+
+<div class="header">
+    <a id="to-main-page" class="header-link" th:href="@{/}">To Main Page</a><br>
+</div>
+
+<div class="content">
+    <form th:action="@{/Admin/{command}(command=${command})}" method="post" enctype="multipart/form-data"
+          th:object="${film}">
+        <h1 class="admin-header">Admin Mode</h1>
+
+        <label for="filmTitle">Film Name:</label>
+        <input type="text" th:value="${film.flmName}" id="filmTitle" name="filmTitle" required th:field="*{flmName}"/>
+        <br>
+
+        <label for="filmAuthor">Film Author:</label>
+        <input type="text" id="filmAuthor" name="filmAuthor" th:value="${film.flmAuthor}" required
+               th:field="*{flmAuthor}"/><br>
+
+        <label for="filmCategory">Categories:</label>
+        <select id="filmCategory" name="filmCategory" multiple required>
+            <option th:each="category : ${film.categories}" th:value="${category.catId}" th:selected="true">
+                <span th:text="${category.catName}"></span>
+            </option>
+            <option th:each="category : ${categories}" th:value="${category.catId}">
+                <span th:text="${category.catName}"></span>
+            </option>
+        </select><br>
+
+        <label for="filmAgeRestriction">Age Restriction:</label>
+        <select id="filmAgeRestriction" name="filmAgeRestriction" required th:field="*{flmAge}">
+            <option th:each="ageRestriction : ${ageRestrictions}" th:value="${ageRestriction}"
+                    th:selected="${film.flmAge == ageRestriction}">
+                <span th:text="${ageRestriction}"></span>
+            </option>
+        </select><br>
+
+        <th:block th:if="${film.flmId == 0}">
+            <label for="filmFile">Film File:</label>
+            <input type="file" id="filmFile" name="filmFile" required><br>
+
+            <label for="trailerFile">Trailer File:</label>
+            <input type="file" id="trailerFile" name="trailerFile" required><br>
+        </th:block>
+        <th:block th:unless="${film.flmId == 0}">
+            <input type="hidden" name="filmId" th:value="${film.flmId}" th:field="*{flmId}"/>
+        </th:block>
+
+        <label for="filmDescription">Film Description:</label>
+        <textarea id="filmDescription" name="filmDescription" required th:field="*{flmDescription}"></textarea><br>
+
+        <label for="filmPrice">Film Price:</label>
+        <input type="number" step="0.01" id="filmPrice" name="filmPrice" min="0" th:value="${film.flmPrice}"
+               required th:field="*{flmPrice}"/><br>
+
+        <label for="filmDiscount">Film Discount:</label>
+        <input type="number" id="filmDiscount" name="filmDiscount" min="0" max="100" th:value="${film.flmDiscount}"
+               required th:field="*{flmDiscount}"/><br>
+
+        <input type="submit" value="Add Film">
+    </form>
+</div>
+</body>
+</html>

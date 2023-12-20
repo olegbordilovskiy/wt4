@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+    <meta charset="UTF-8">
+    <title>My Cool Site</title>
+    <link rel="stylesheet" type="text/css" href="/style/authorisation.css">
+</head>
+<body>
+<div class="header">
+    <a id="to-main-page" class="header-link" th:href="@{/}">To main page</a><br>
+</div>
+
+<div class="content">
+    <h1 id="authorisation-header"><span th:text="Authorization"></span></h1>
+
+    <form action="/Authorization" method="post" class="authorisation-form" th:object="${user}">
+        <label for="emailAuthorization"><span th:text="Email"></span>:</label>
+        <input type="email" id="emailAuthorization" name="emailAuthorization" th:field="*{usrEmail}"/>
+        <br>
+        <label for="passwordAuthorization"><span th:text="Password"></span>:</label>
+        <input type="password" id="passwordAuthorization" name="passwordAuthorization" th:field="*{usrPassword}"/>
+        <br>
+        <input type="submit" id="authorise-btn" value="Authorize">
+    </form>
+</div>
+</body>
+</html>

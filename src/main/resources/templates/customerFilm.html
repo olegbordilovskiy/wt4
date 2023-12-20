@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" type="text/css" th:href="@{/style/customerFilm.css}">
+    <title>My Cool Site</title>
+</head>
+<body>
+<div class="header">
+    <a id="to-main-page" class="header-link" th:href="@{/}">To main page</a><br>
+</div>
+
+<div th:if="${!isBanned and session.isAdmin == null}" class="user-links">
+    <a class="user-btn" th:href="@{/User/Library}">Library</a><br>
+    <a class="user-btn" th:href="@{/User/Cart}">Cart</a><br>
+</div>
+
+<div class="content">
+    <h1 class="film-header" th:text="${film.flmName}"></h1><br>
+
+    <div th:if="${!isPaid}">
+        <div th:if="${film.flmDiscount != 0}">
+            <span style="text-decoration: line-through;" th:text="${film.flmPrice}"></span>
+            <span th:text="${film.realPrice}"></span><br>
+        </div>
+        <div th:unless="${film.flmDiscount != 0}">
+            <span th:text="${film.flmPrice}"></span><br>
+        </div>
+
+        <div th:if="${!isFilmInCart && !isBanned && session.isAdmin == null}">
+            <form th:action="@{/User/Cart/Add}" method="post">
+                <input type="hidden" name="filmID" th:value="${film.flmId}">
+                <input type="submit" value="Add to cart"/>
+            </form>
+        </div>
+    </div>
+
+    <p>
+        Age restriction: <span th:text="${film.flmAge}"></span><br>
+        Author: <span th:text="${film.flmAuthor}"></span><br>
+        Categories:
+        <span th:each="category : ${film.categories}" th:text="${category.catName}"></span><br>
+    </p>
+
+    <video width="640" height="400" controls>
+        <source th:src="@{/Video/Trailer(trailerPath=${media.fmTrailerPath})}" type="video/mp4">
+    </video>
+    <br>
+
+    <p th:text="${film.flmDescription}"></p>
+
+    <div th:if="${(isPaid and !isBanned) or session.isAdmin != null}">
+        <video width="640" height="480" controls>
+            <source th:src="@{/Video/Film(filmPath=${media.fmFilmPath})}" type="video/mp4">
+        </video>
+        <br>
+    </div>
+
+    <div th:each="feedback : ${feedbacks}">
+        <span th:text="${feedback.fbkAuthor.usrEmail}"></span><br>
+        <div th:if="${session.isAdmin != null}">
+            <form th:action="@{/Admin/Ban}" method="post">
+                <input type="hidden" name="authorId" th:value="${feedback.fbkAuthor.usrId}">
+                <input type="submit" value="Ban"/>
+            </form>
+        </div>
+        <span th:text="${feedback.fbkRating}"></span><br>
+        <p th:text="${feedback.fbkText}"></p>
+    </div>
+
+    <div th:if="${not isBanned and session.isAdmin == null and isPaid}">
+        <form th:action="@{/User/Feedback}" method="post" th:object="${feedback}">
+            <label for="filmFeedback">Feedback:</label>
+            <textarea id="filmFeedback" name="filmFeedback" maxlength="5000" th:field="*{fbkText}"></textarea>
+
+            <label for="rating">Mark:</label>
+            <input type="number" min="0" max="10" id="rating" name="rating" th:field="*{fbkRating}"/><br>
+
+            <input type="hidden" name="filmID" th:value="${film.flmId}" th:field="*{fbkFilm}"/>
+
+            <input type="submit" value="Leave Feedback"/>
+        </form>
+    </div>
+</div>
+</body>
+</html>

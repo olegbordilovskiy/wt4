@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" th:href="@{/style/library.css}">
+    <title th:text="Library"></title>
+</head>
+<body>
+
+<div class="header">
+    <a id="to-main-page" class="header-link" th:href="@{/}">To Main Page</a><br>
+</div>
+
+<div class="content">
+    <div th:each="film : ${films}">
+        <a th:href="@{/Film(filmId=${film.flmId})}" th:text="${film.flmName}"></a><br>
+
+        Age restriction: <span th:text="${film.flmAge}"></span><br>
+        Author: <span th:text="${film.flmAuthor}"></span><br>
+    </div>
+</div>
+
+</body>
+</html>

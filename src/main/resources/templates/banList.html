@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" type="text/css" href="/style/banList.css">
+    <title>My Cool Site</title>
+</head>
+<body>
+
+<div class="header">
+    <a id="to-main-page" class="header-link" th:href="@{/}">To Main Page</a><br>
+</div>
+
+<div class="content">
+    <div th:each="user : ${users}">
+        <form th:action="@{/Admin/Unban}" method="post">
+            <p th:text="${user.usrEmail}"></p>
+            <input type="hidden" name="userId" th:value="${user.usrId}">
+            <input type="submit" value="Unban"/>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

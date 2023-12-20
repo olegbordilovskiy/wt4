@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" type="text/css" th:href="@{/style/cart.css}">
+    <title>My Cool Site</title>
+</head>
+<body>
+
+<div class="header">
+    <a id="to-main-page" class="header-link" th:href="@{/}">To main page</a><br>
+</div>
+
+<div class="content">
+    <h1 class="cart-header">Cart</h1>
+
+    <div th:each="film : ${films}">
+        <a th:href="@{/Film(filmId=${film.flmId})}" th:value="${film.flmName}"></a><br>
+        <span th:if="${film.flmDiscount != 0}" style="text-decoration: line-through;" th:value="${film.flmPrice}"></span>
+        <span th:unless="${film.flmDiscount != 0}" th:value="${film.flmPrice}"></span>
+        <span th:text="${film.realPrice}"></span><br>
+        Age restriction: <span th:text="${film.flmAge}"></span><br>
+        Author: <span th:text="${film.flmAuthor}"></span><br>
+
+        <form th:action="@{/User/Cart/Remove}" method="post" class="cart-form">
+            <input type="submit" value="Delete">
+            <input type="hidden" name="filmID" th:value="${film.flmId}">
+        </form>
+    </div>
+
+    <div th:if="${total != 0}">
+        <form th:action="@{/User/Cart/Buy}" method="post" class="cart-form">
+            <input type="submit" th:value="${total}">
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
